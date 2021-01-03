@@ -6,6 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:loading/indicator/ball_pulse_indicator.dart';
+import 'package:loading/loading.dart';
 import 'package:rljit_app/models/file.dart';
 import 'package:toast/toast.dart';
 
@@ -22,12 +24,17 @@ class _FirstPageState extends State<FirstPage> {
 
   final _formKey = GlobalKey<FormState>();
 
+  bool _isStarted = false;
+  bool _isEnded = false;
+  bool _isError = false;
+
   int dropdownValue = 1;
   String dropdownSem = '1';
   String dropdownCycle = 'P';
   String dropdownBranch = 'CS';
   String subjectCode = '';
   String _fileName = '';
+  String _fileDescription = '';
   List<String> _branchesList = ['CS','EEE','ECE','ME','CV','IS'];
 
   String completeData = '';
@@ -80,11 +87,11 @@ class _FirstPageState extends State<FirstPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  SizedBox(height: 20.0,),
+                  SizedBox(height: 10.0,),
                   Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text("Select Year"),
+                    Text("Select Year :"),
                     DropdownButton<int>(
 
                       value: dropdownValue,
@@ -130,12 +137,12 @@ class _FirstPageState extends State<FirstPage> {
                     ),
                   ],
                 ),
-                  SizedBox(height: 20.0,),
+                  SizedBox(height: 10.0,),
                   dropdownValue == 1?
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text("Select Cycle"),
+                      Text("Select Cycle :"),
                       DropdownButton<String>(
 
                         value: dropdownCycle,
@@ -166,7 +173,7 @@ class _FirstPageState extends State<FirstPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text("Select Sem"),
+                      Text("Select Sem :"),
                       DropdownButton<String>(
 
                         value: dropdownSem,
@@ -193,10 +200,12 @@ class _FirstPageState extends State<FirstPage> {
                       ),
                     ],
                   ),
+                  dropdownValue == 1?
+                  Container(color: Colors.deepOrange,):
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text("Select Branch"),
+                      Text("Select Branch :"),
                       DropdownButton<String>(
 
                         value: dropdownBranch,
@@ -253,7 +262,32 @@ class _FirstPageState extends State<FirstPage> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 20.0,),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Enter File Description:"),
+                      SizedBox(width: 20,),
+                      Expanded(
+                        child: TextFormField(
+                          textCapitalization: TextCapitalization.sentences,
+                          onChanged: (val){
+                            setState(() {
+                              _fileDescription = val;
+                            });
 
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please provide some description';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                   SizedBox(height: 20.0,),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -268,9 +302,9 @@ class _FirstPageState extends State<FirstPage> {
                             setState(() {
                                 _fileName = val.toUpperCase();
                               if(dropdownValue == 1){
-                                completeData = dropdownValue.toString() + "-"+dropdownCycle  + "-"+subjectCode+"-"+dropdownBranch;
+                                completeData = dropdownValue.toString() + "-"+dropdownCycle  + "-"+subjectCode+"-"+dropdownBranch+"-"+_fileDescription;
                               }else{
-                                completeData = dropdownValue.toString() + "-"+ dropdownSem + "-"+subjectCode+"-"+dropdownBranch;
+                                completeData = dropdownValue.toString() + "-"+ dropdownSem + "-"+subjectCode+"-"+dropdownBranch+"-"+_fileDescription;
                               }
                             });
 
@@ -286,7 +320,18 @@ class _FirstPageState extends State<FirstPage> {
                     ],
                   ),
                   SizedBox(height: 20.0,),
-                  Text(completeData),
+                  Text(
+                    completeData,
+                  style: TextStyle(
+                    color: _isError? Colors.red :Colors.green,
+                  ),),
+                  _isStarted & !_isEnded  & !_isError?
+                  Container(
+                    color: Colors.lightBlue,
+                    child: Center(
+                      child: Loading(indicator:  BallPulseIndicator(), size: 100.0,color: Colors.pink),
+                    )):
+                  Container(),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: ElevatedButton(
@@ -295,10 +340,12 @@ class _FirstPageState extends State<FirstPage> {
                         // otherwise.
                         if (_formKey.currentState.validate()) {
                           // If the form is valid, display a Snackbar.
+
+
                           getPdfAndUpload();
                         }
                       },
-                      child: Text('Upload'),
+                      child: Text('Choose and Upload'),
                     ),
                   ),
                 ],
@@ -311,7 +358,10 @@ class _FirstPageState extends State<FirstPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          getPdfAndUpload();
+         // getPdfAndUpload();
+          setState(() {
+            _isEnded = true;
+          });
 
 
         },
@@ -335,9 +385,9 @@ class _FirstPageState extends State<FirstPage> {
       File file = File(result.files.single.path);
       print(fileName);
       print('${file.readAsBytesSync()}');
-      Toast.show("Permission.storage.status "+'${file.readAsBytesSync()}'.toString(), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+      //Toast.show("Permission.storage.status "+'${file.readAsBytesSync()}'.toString(), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
 
-      savePdf(file.readAsBytesSync(), fileName);
+      savePdf(file.readAsBytesSync(), fileName,_fileDescription);
 
     } else {
       // User canceled the picker
@@ -350,57 +400,97 @@ class _FirstPageState extends State<FirstPage> {
 
   }
 
-  Future savePdf(List<int> asset, String name) async {
+  Future savePdf(List<int> asset, String name, String description) async {
 
 
-    /*
+
     StorageReference reference = FirebaseStorage.instance.ref();
 
 
 
     if(dropdownValue == 1){
-      reference.child(dropdownValue.toString()+"-YEAR").child(dropdownCycle).child(name);
+      reference = reference.child(dropdownValue.toString()+"-YEAR").child(dropdownCycle).child(name);
       print("Storage reference name");
       print(reference.child(dropdownValue.toString()+"-YEAR").child(dropdownCycle).child(name).getPath());
     }else{
-      reference.child(dropdownValue.toString()+"-YEAR-"+dropdownSem).child(dropdownBranch).child(name);
+      reference = reference.child(dropdownValue.toString()+"-YEAR-"+dropdownSem).child(dropdownBranch).child(name);
       print("Storage reference name");
       print(reference.child(dropdownValue.toString()+"-YEAR-"+dropdownSem).child(dropdownBranch).child(name).getPath());
 
     }
 
 
-     */
+    //StorageReference reference2 = FirebaseStorage.instance.ref();//.child("TEST").child(name);
+    //reference2.child("4-YEAR-8").child("CS").child(name);
+    //print(dropdownValue.toString()+"-YEAR-"+dropdownSem+"/"+dropdownBranch);
 
-
-
-
-
-    //reference.child(name);
-
-    StorageReference reference = FirebaseStorage.instance.ref().child(name);
-
-    print(reference.getPath().toString());
+  // reference2 = reference2.child(dropdownValue.toString()+"-YEAR-"+dropdownSem).child(dropdownBranch).child(name);
+    print("Storage reference name");
+    print(reference.getPath());// .getPath().toString());
 
 
     StorageUploadTask uploadTask = reference.putData(asset);
+
+    setState(() {
+      _isStarted =  uploadTask.isInProgress;
+      _isEnded = false;
+      _isError = false;
+    });
+
+    print(_isStarted);
+    print(_isEnded);
+    print(_isError);
+
+
+    bool b1 = uploadTask.isInProgress;
     String url = await (await uploadTask.onComplete).ref.getDownloadURL();
+    bool b2 = uploadTask.isComplete;
     print(url);
-    documentFileUpload(url);
+    documentFileUpload(url,description);
     return  url;
   }
-  void documentFileUpload(String str) {
+
+  void documentFileUpload(String url, String description) {
 
     var data = {
-      "PDF": str,
+      "PDF": url,
+      "DESC": description
     };
 
     if(dropdownValue == 1){
-      mainReference.document(dropdownValue.toString()+"-YEAR").collection(dropdownCycle).add(data).then((value) => print("File uploaded"))
-          .catchError((error) => print("Failed to upload file: $error"));
+      mainReference.document(dropdownValue.toString()+"-YEAR").collection(dropdownCycle).add(data)
+          .then((value) {
+            print("File uploaded");
+            setState(() {
+              _isEnded = true;
+              completeData = "File uploaded successfully!";
+            });
+
+          })
+          .catchError((error) {
+            print("Failed to upload file: $error");
+            setState(() {
+              _isError = true;
+              completeData = "Failed to upload file: $error";
+            });
+
+          });
     }else{
-      mainReference.document(dropdownValue.toString()+"-YEAR-"+dropdownSem).collection(dropdownBranch).add(data).then((value) => print("File uploaded"))
-          .catchError((error) => print("Failed to upload file: $error"));
+      mainReference.document(dropdownValue.toString()+"-YEAR-"+dropdownSem).collection(dropdownBranch).add(data)
+          .then((value) {
+            print("File uploaded");
+            setState(() {
+              _isEnded = true;
+              completeData = "File uploaded successfully!";
+            });
+          })
+          .catchError((error) {
+            print("Failed to upload file: $error");
+            setState(() {
+              _isError = true;
+              completeData = "Failed to upload file: $error";
+            });
+          });
     }
 
 
@@ -412,61 +502,6 @@ class _FirstPageState extends State<FirstPage> {
   }
 
 
-}
-
-// Create a Form widget.
-class MyCustomForm extends StatefulWidget {
-  @override
-  MyCustomFormState createState() {
-    return MyCustomFormState();
-  }
-}
-
-// Create a corresponding State class.
-// This class holds data related to the form.
-class MyCustomFormState extends State<MyCustomForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a GlobalKey<FormState>,
-  // not a GlobalKey<MyCustomFormState>.
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // Validate returns true if the form is valid, or false
-                // otherwise.
-                if (_formKey.currentState.validate()) {
-                  // If the form is valid, display a Snackbar.
-                  Scaffold.of(context)
-                      .showSnackBar(SnackBar(content: Text('Processing Data')));
-                }
-              },
-              child: Text('Submit'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 
@@ -523,3 +558,37 @@ itemList.length==0?Text("Loading"):
         },
       ),
  */
+
+String _bytesTransferred(StorageTaskSnapshot snapshot) {
+  double res = snapshot.bytesTransferred / 1024.0;
+  double res2 = snapshot.totalByteCount / 1024.0;
+  return '${res.truncate().toString()}/${res2.truncate().toString()}';
+}
+
+Widget _uploadStatus(StorageUploadTask task) {
+  return StreamBuilder(
+    stream: task.events,
+    builder: (BuildContext context, snapshot) {
+      Widget subtitle;
+      if (snapshot.hasData) {
+        final StorageTaskEvent event = snapshot.data;
+        final StorageTaskSnapshot snap = event.snapshot;
+        subtitle = Text('${_bytesTransferred(snap)} KB sent');
+      } else {
+        subtitle = const Text('Starting...');
+      }
+      return ListTile(
+        title: task.isComplete && task.isSuccessful
+            ? Text(
+          'Done',
+          style: TextStyle(),
+        )
+            : Text(
+          'Uploading',
+          style: TextStyle(),
+        ),
+        subtitle: subtitle,
+      );
+    },
+  );
+}
