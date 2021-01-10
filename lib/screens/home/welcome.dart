@@ -46,6 +46,7 @@ class _WelcomeState extends State<Welcome> {
             ),
             FlatButton(
               onPressed: () async {
+
                 var status = await Permission.storage.status;
                 debugPrint("Permission.storage.status "+status.toString());
                 Toast.show("Permission.storage.status "+status.toString(), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
@@ -59,11 +60,17 @@ class _WelcomeState extends State<Welcome> {
                     Toast.show("Permission.storage.status "+status.toString(), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
 
 
+                  }else{
+                    debugPrint("Permission.storage.status "+status.toString());
+                    Toast.show("Permission.storage.status "+status.toString()+"Please provide the permissions", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+
+
                   }
-                }else if(status.isGranted){
+                }
+                else if(status.isGranted){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => FirstPage()),
+                    MaterialPageRoute(builder: (context) => Upload()),
                   );
                 }
 
@@ -71,7 +78,9 @@ class _WelcomeState extends State<Welcome> {
               child: Text('Register'),
             ),
             FlatButton(
-              onPressed: (){
+              onPressed: () {
+
+                /*
 
                 final CollectionReference mainReference = Firestore.instance
                     .collection('files');
@@ -96,6 +105,9 @@ class _WelcomeState extends State<Welcome> {
                     .catchError((error) => print("Failed to add user: $error"));
 
 
+
+
+                 */
               },
               child: Text('Admission'),
             )

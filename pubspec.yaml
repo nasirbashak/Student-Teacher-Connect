@@ -41,6 +41,8 @@ dependencies:
   permission_handler: ^5.0.1+1
   toast: ^0.1.5
 
+  curved_navigation_bar:
+
   flutter_plugin_pdf_viewer:
   file_picker:
   firebase_storage:
