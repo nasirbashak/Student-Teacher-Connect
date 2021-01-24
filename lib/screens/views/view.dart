@@ -152,10 +152,10 @@ class _ViewState extends State<View> {
             shadowColor: Colors.black,
             child: ListTile(
               onLongPress: (){
-                Toast.show("Upload", context);
+                Toast.show("Select", context);
               },
               leading: Icon(Icons.arrow_circle_up),
-              title: const Text('Upload files',
+              title: const Text('View files',
                 style: TextStyle(
                   fontSize: 25.0,
                   color: Colors.lightBlue,

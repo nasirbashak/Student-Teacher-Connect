@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:rljit_app/screens/authentication/welcomePage.dart';
 import 'package:rljit_app/screens/home/welcome.dart';
 
 void main() {
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Welcome(title: 'Connect'),
+      home: WelcomePage(),//Welcome(title: 'Connect'),
     );
   }
 }

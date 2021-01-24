@@ -1,11 +1,48 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:rljit_app/models/users.dart';
 
 class DatabaseService {
 
   final String uid;
+  final CollectionReference _collectionReference = Firestore.instance
+      .collection('users');
+
+  final CollectionReference _collectionReferenceUsns = Firestore.instance
+      .collection('usns');
 
   DatabaseService({this.uid});
 
+  createUserData(String name, String usn, String email) {
+
+    _collectionReferenceUsns.document().setData({
+      "usn" : usn
+    });
+
+
+
+    _collectionReference.document(uid).setData({
+      "name": name,
+      "usn": usn,
+      "email" : email
+    });
+
+  }
+
+ Future getUserData() async {
+
+
+   Future<DocumentSnapshot> _snapshot =  _collectionReference.document(uid).get();
+
+   _snapshot.then((value) {
+     print("DATA");
+     print(value.data);
+     return User(usn: value.data['usn'],name: value.data['name']);
+
+   });
+
+ }
 
 
 }

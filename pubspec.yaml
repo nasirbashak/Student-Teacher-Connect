@@ -42,6 +42,10 @@ dependencies:
   toast: ^0.1.5
 
   curved_navigation_bar:
+  google_fonts: ^0.3.5
+
+  lite_rolling_switch: ^0.1.1
+
 
   flutter_plugin_pdf_viewer:
   file_picker:
