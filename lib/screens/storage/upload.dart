@@ -142,7 +142,7 @@ class _FirstPageState extends State<FirstPage> {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 key: _formKey,
               child: Container(
-              color: Colors.amber,
+              color: Colors.white,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -635,7 +635,7 @@ class _SecondPageState extends State<SecondPage> {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 key: _formKey,
                 child: Container(
-                  color: Colors.amber,
+                  color: Colors.white,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
