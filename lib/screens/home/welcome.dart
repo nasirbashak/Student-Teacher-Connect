@@ -51,7 +51,7 @@ class _WelcomeState extends State<Welcome> {
                 debugPrint("Permission.storage.status "+status.toString());
                 Toast.show("Permission.storage.status "+status.toString(), context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
 
-                if (status.isUndetermined) {
+                if (status.isRestricted) {
                   // We didn't ask for permission yet.
                   if (await Permission.storage.request().isGranted) {
                     // Either the permission was already granted before or the user just granted it.

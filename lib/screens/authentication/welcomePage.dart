@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rljit_app/screens/authentication/loginPage.dart';
 import 'package:rljit_app/screens/authentication/signup.dart';
+import 'package:rljit_app/screens/home/admission.dart';
 
 class WelcomePage extends StatefulWidget {
   WelcomePage({Key key, this.title}) : super(key: key);
@@ -67,7 +68,9 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget _admissionButton() {
     return InkWell(
       onTap: () {
-
+        print("Admission");
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Admission()));
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
