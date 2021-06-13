@@ -1,6 +1,6 @@
-class Modal{
+class Model{
   String link,name;
-  Modal(this.link,this.name);
+  Model(this.link,this.name);
 }
 
 class Document{

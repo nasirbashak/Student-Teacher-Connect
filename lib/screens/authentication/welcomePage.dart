@@ -115,11 +115,6 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget build(BuildContext context) {
 
 
-
-
-
-
-
     return Scaffold(
       body:SingleChildScrollView(
         child:Container(

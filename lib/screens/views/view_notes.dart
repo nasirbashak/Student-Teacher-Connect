@@ -6,21 +6,23 @@ import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:rljit_app/models/file.dart';
 import 'package:rljit_app/screens/views/show_document.dart';
+import 'package:rljit_app/screens/views/view_timetable.dart';
 import 'package:toast/toast.dart';
 
 
-class View extends StatefulWidget {
+class ViewNotes extends StatefulWidget {
   @override
-  _ViewState createState() => _ViewState();
+  _ViewNotesState createState() => _ViewNotesState();
 }
 
-class _ViewState extends State<View> {
+class _ViewNotesState extends State<ViewNotes> {
+
 
   final CollectionReference mainReference = Firestore.instance
       .collection('files');
 
 
-  List<Modal> itemList=List();
+  List<Model> itemList=List();
 
   List<Document> documentsList=List();
 
@@ -141,10 +143,7 @@ class _ViewState extends State<View> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey,
-      appBar: AppBar(
-        backgroundColor: Colors.lightBlue,
-        title: Text("Documents"),
-      ),
+
       body: Column(
         children: [
           Card(
@@ -161,7 +160,7 @@ class _ViewState extends State<View> {
                   color: Colors.lightBlue,
                 ),),
               subtitle: Text(
-                'Fill the form, pick a file and upload.',
+                'Fill the form, pick a file to view.',
                 style: TextStyle(color: Colors.black.withOpacity(.6)),
               ),
             ),
@@ -428,13 +427,7 @@ class _ViewState extends State<View> {
 
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-         getData();
-        },
-        child: Icon(Icons.add,color: Colors.white,),
-        backgroundColor: Colors.red,
-      ),
+
     );
   }
 }

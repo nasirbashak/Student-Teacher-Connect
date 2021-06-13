@@ -4,7 +4,8 @@ import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import 'package:rljit_app/models/users.dart';
 import 'package:rljit_app/screens/authentication/signup.dart';
 import 'package:rljit_app/screens/storage/upload.dart';
-import 'package:rljit_app/screens/views/view.dart';
+import 'package:rljit_app/screens/views/viewWrapper.dart';
+import 'package:rljit_app/screens/views/view_notes.dart';
 import 'package:rljit_app/services/authenticate.dart';
 import 'package:toast/toast.dart';
 
@@ -165,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
               if(_student){
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => View()),
+                  MaterialPageRoute(builder: (context) => ViewWrapper()),
                 );
 
               }else{

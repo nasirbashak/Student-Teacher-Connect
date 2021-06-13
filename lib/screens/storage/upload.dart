@@ -11,7 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:rljit_app/models/file.dart';
-import 'package:rljit_app/screens/views/view.dart';
+import 'package:rljit_app/screens/views/viewWrapper.dart';
+import 'package:rljit_app/screens/views/view_notes.dart';
 import 'package:toast/toast.dart';
 
 
@@ -42,7 +43,7 @@ class _UploadState extends State<Upload> {
             Toast.show(_currentIndex.toString(), context);
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => View()),
+              MaterialPageRoute(builder: (context) => ViewWrapper()),
             );
           }, icon: Icon(Icons.slideshow), label: Text("View"))
         ],
@@ -82,7 +83,7 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
-  List<Modal> itemList=List();
+  List<Model> itemList=List();
 
   final CollectionReference mainReference = Firestore.instance
       .collection('files');
@@ -416,18 +417,6 @@ class _FirstPageState extends State<FirstPage> {
         ),
       ),
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-         // getPdfAndUpload();
-          setState(() {
-            _isEnded = true;
-          });
-
-
-        },
-        child: Icon(Icons.add,color: Colors.white,),
-        backgroundColor: Colors.red,
-      ),
     );
   }
 
@@ -576,7 +565,7 @@ class SecondPage extends StatefulWidget {
 
 class _SecondPageState extends State<SecondPage> {
 
-  List<Modal> itemList=List();
+  List<Model> itemList=List();
 
   final CollectionReference mainReference = Firestore.instance
       .collection('timetable');
@@ -891,17 +880,6 @@ class _SecondPageState extends State<SecondPage> {
         ),
       ),
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // getPdfAndUpload();
-          setState(() {
-            _isEnded = true;
-          });
-
-        },
-        child: Icon(Icons.add,color: Colors.white,),
-        backgroundColor: Colors.blue,
-      ),
     );
 
   }
